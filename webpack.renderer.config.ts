@@ -1,7 +1,7 @@
+import path from 'path';
 import type { Configuration } from 'webpack';
-
-import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
+import { rules } from './webpack.rules';
 
 rules.push({
   test: /\.css$/,
@@ -15,5 +15,8 @@ export const rendererConfig: Configuration = {
   plugins,
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
   },
 };
