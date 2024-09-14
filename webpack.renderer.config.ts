@@ -5,7 +5,10 @@ import { rules } from './webpack.rules';
 
 rules.push({
   test: /\.css$/,
-  use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+  use: [
+    { loader: 'style-loader' },
+    { loader: 'css-loader', options: { importLoaders: 1, modules: true } },
+  ],
 });
 
 export const rendererConfig: Configuration = {
