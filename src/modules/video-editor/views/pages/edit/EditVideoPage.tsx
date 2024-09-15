@@ -7,6 +7,7 @@ import {
   Form,
   FormProps,
   Input,
+  message,
   Radio,
   Row,
   Space,
@@ -16,12 +17,26 @@ import {
   Upload,
 } from 'antd';
 import { MoreHorizontalIcon, UploadIcon } from 'lucide-react';
+import { useCallback, useState } from 'react';
 import { Flip, Rotate } from '../../../constants';
 import { createOutputPath, getFilePath, normFile } from '../../../utils';
+import { useProcess } from '../../hooks/useProcess';
 import styles from './EditVideoPage.module.css';
 
 function EditVideoPage() {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [messageApi, messageContextHolder] = message.useMessage();
+
+  useProcess({
+    onStart: useCallback(() => {
+      setLoading(true);
+    }, []),
+    onEnd: useCallback(() => {
+      setLoading(false);
+      messageApi.success('Edit video completed.');
+    }, []),
+  });
 
   const handleTrimBlankBorder = () => {
     form
@@ -187,11 +202,13 @@ function EditVideoPage() {
         <Tabs items={items} type='card' className={styles.editOptionsTabs} />
 
         <Flex justify='center' className={styles.actions}>
-          <Button type='primary' htmlType='submit' size='large'>
+          <Button type='primary' htmlType='submit' size='large' loading={loading}>
             Submit
           </Button>
         </Flex>
       </Form>
+
+      {messageContextHolder}
     </Flex>
   );
 }

@@ -1,11 +1,25 @@
 import { extractPath } from '@/utils';
-import { Button, Col, Flex, Form, FormProps, Input, Row, Typography, Upload } from 'antd';
+import { Button, Col, Flex, Form, FormProps, Input, message, Row, Typography, Upload } from 'antd';
 import { UploadIcon } from 'lucide-react';
+import { useCallback, useState } from 'react';
 import { getFilePath, normFile } from '../../../utils';
+import { useProcess } from '../../hooks/useProcess';
 import styles from './TakeScreenshotPage.module.css';
 
 function TakeScreenshotPage() {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [messageApi, messageContextHolder] = message.useMessage();
+
+  useProcess({
+    onStart: useCallback(() => {
+      setLoading(true);
+    }, []),
+    onEnd: useCallback(() => {
+      setLoading(false);
+      messageApi.success('Take screenshots completed.');
+    }, []),
+  });
 
   const handleChooseDestination = async () => {
     const path = await window.commonApi.saveToFolder({
@@ -82,11 +96,13 @@ function TakeScreenshotPage() {
         </Form.Item>
 
         <Flex justify='center' className={styles.actions}>
-          <Button type='primary' htmlType='submit' size='large'>
+          <Button type='primary' htmlType='submit' size='large' loading={loading}>
             Submit
           </Button>
         </Flex>
       </Form>
+
+      {messageContextHolder}
     </Flex>
   );
 }

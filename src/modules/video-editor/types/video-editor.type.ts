@@ -1,10 +1,14 @@
+import { IpcRendererEvent } from 'electron';
 import { z } from 'zod';
+import { ProcessEvent } from '../constants';
 import {
   editSchema,
   mergeSchema,
   takeScreenshotSchema,
   trimBlankBorderSchema,
 } from '../schemas/video-editor.schema';
+
+export type Listener = (event: IpcRendererEvent, name: ProcessEvent, ...args: any[]) => void;
 
 export type EditParams = z.infer<typeof editSchema>;
 

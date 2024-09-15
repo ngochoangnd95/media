@@ -1,13 +1,12 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 import { FfmpegEvent, ProcessEvent } from './constants';
 import {
   EditParams,
+  Listener,
   MergeParams,
   TakeScreenshotParams,
   TrimBlankBorderParams,
 } from './types/video-editor.type';
-
-export type Listener = (event: IpcRendererEvent, name: ProcessEvent, ...args: any[]) => void;
 
 interface VideoEditorApi {
   edit: (params: EditParams) => void;

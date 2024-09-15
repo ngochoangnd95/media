@@ -1,10 +1,24 @@
-import { Button, Col, Flex, Form, FormProps, Input, Row, Typography, Upload } from 'antd';
+import { Button, Col, Flex, Form, FormProps, Input, message, Row, Typography, Upload } from 'antd';
 import { UploadIcon } from 'lucide-react';
+import { useCallback, useState } from 'react';
 import { createOutputPath, getFilePath, normFile } from '../../../utils';
+import { useProcess } from '../../hooks/useProcess';
 import styles from './MergeVideosPage.module.css';
 
 function MergeVideosPage() {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [messageApi, messageContextHolder] = message.useMessage();
+
+  useProcess({
+    onStart: useCallback(() => {
+      setLoading(true);
+    }, []),
+    onEnd: useCallback(() => {
+      setLoading(false);
+      messageApi.success('Merge videos completed.');
+    }, []),
+  });
 
   const handleChooseDestination = async () => {
     const path = await window.commonApi.saveToFile({
@@ -76,11 +90,13 @@ function MergeVideosPage() {
         </Form.Item>
 
         <Flex justify='center' className={styles.actions}>
-          <Button type='primary' htmlType='submit' size='large'>
+          <Button type='primary' htmlType='submit' size='large' loading={loading}>
             Submit
           </Button>
         </Flex>
       </Form>
+
+      {messageContextHolder}
     </Flex>
   );
 }
