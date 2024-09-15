@@ -12,5 +12,13 @@
     "plugin:import/electron",
     "plugin:import/typescript"
   ],
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [["@", "./src"]],
+        "extensions": [".ts", ".tsx"]
+      }
+    }
+  },
   "parser": "@typescript-eslint/parser"
 }
