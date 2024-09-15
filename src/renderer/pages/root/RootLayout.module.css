@@ -1,14 +1,12 @@
 .container {
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .header {
   height: 3rem;
   line-height: 3rem;
-  padding: 0 0.5rem;
-}
-
-.content {
-  height: 100%;
-  overflow: auto;
+  padding: 0 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
