@@ -8,7 +8,7 @@ export type Tag = typeof tags.$inferSelect;
 
 export type Source = typeof sources.$inferSelect;
 
-export type MediaWithTagsAndSources = Media & {
+export type MediaWithTagsAndSource = Media & {
   tags: Tag[];
   source: Source | null;
 };

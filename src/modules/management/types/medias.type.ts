@@ -1,7 +1,10 @@
-import { Pageable } from '@/modules/common/types/pagination.type';
+import { Mutable, Pageable } from '@/modules/common/types/common.type';
 import { z } from 'zod';
-import { findManyMediasSchema } from '../schemas/medias.schema';
-import { MediaWithTagsAndSources } from './entities.type';
+import { createMediaSchema, findManyMediasSchema } from '../schemas/medias.schema';
+import { MediaWithTagsAndSource } from './entities.type';
 
 export type FindManyMediasParams = z.infer<typeof findManyMediasSchema>;
-export type FindManyMediasData = Pageable<MediaWithTagsAndSources>;
+export type FindManyMediasData = Pageable<MediaWithTagsAndSource>;
+
+export type CreateMediaParams = z.infer<typeof createMediaSchema>;
+export type CreateMediaData = Mutable<MediaWithTagsAndSource>;

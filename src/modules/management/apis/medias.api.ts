@@ -1,14 +1,19 @@
 import { Validate } from '@/decorators';
-import { count, eq } from 'drizzle-orm';
+import { count, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '../db';
 import { mediasToTags } from '../db/schemas/medias-to-tags.schema';
 import { medias } from '../db/schemas/medias.schema';
 import { sources } from '../db/schemas/sources.schema';
 import { tags } from '../db/schemas/tags.schema';
-import { findManyMediasSchema } from '../schemas/medias.schema';
-import { MediaWithTagsAndSources } from '../types/entities.type';
-import { FindManyMediasData, FindManyMediasParams } from '../types/medias.type';
+import { createMediaSchema, findManyMediasSchema } from '../schemas/medias.schema';
+import { MediaWithTagsAndSource, Source, Tag } from '../types/entities.type';
+import {
+  CreateMediaData,
+  CreateMediaParams,
+  FindManyMediasData,
+  FindManyMediasParams,
+} from '../types/medias.type';
 
 export class MediasApi {
   @Validate(findManyMediasSchema)
@@ -44,7 +49,7 @@ export class MediasApi {
       const results = prepared.all();
 
       // group by media id
-      const grouped = results.reduce<Record<number, MediaWithTagsAndSources>>((acc, row) => {
+      const grouped = results.reduce<Record<number, MediaWithTagsAndSource>>((acc, row) => {
         const { media, tag, source } = row;
         if (!acc[media.id]) {
           acc[media.id] = {
@@ -70,6 +75,53 @@ export class MediasApi {
       if (error instanceof z.ZodError) {
         console.error('issues', error.issues);
         return;
+      }
+      console.error(error);
+    }
+  }
+
+  @Validate(createMediaSchema)
+  async create(params: CreateMediaParams): Promise<CreateMediaData | undefined> {
+    try {
+      const { tagIds, ...mediaDto } = params;
+
+      // check source exists
+      let existingSource: Source | null = null;
+      if (mediaDto.sourceId) {
+        existingSource = (
+          await db.select().from(sources).where(eq(sources.id, mediaDto.sourceId))
+        )[0];
+      }
+
+      // insert new media
+      const [newMedia] = await db
+        .insert(medias)
+        .values({ ...mediaDto, sourceId: existingSource?.id })
+        .returning();
+
+      // check tags exist
+      let existingTags: Tag[] = [];
+      if (tagIds && tagIds.length > 0) {
+        existingTags = await db.select().from(tags).where(inArray(tags.id, tagIds));
+        // then insert new media-tag relationships to junction table
+        await db.insert(mediasToTags).values(
+          existingTags.map(({ id: tagId }) => ({
+            tagId,
+            mediaId: newMedia.id,
+          })),
+        );
+      }
+
+      return {
+        data: {
+          ...newMedia,
+          source: existingSource,
+          tags: existingTags,
+        },
+      };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.error('issues', error.issues);
       }
       console.error(error);
     }

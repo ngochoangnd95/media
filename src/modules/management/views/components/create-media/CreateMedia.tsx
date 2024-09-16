@@ -1,26 +1,24 @@
+import { CreateMediaParams } from '@/modules/management/types/medias.type';
 import { Modal, ModalInstance } from '@/renderer/components/modal';
-import {
-  Button,
-  Divider,
-  Form,
-  FormProps,
-  Input,
-  Radio,
-  RadioGroupProps,
-  Rate,
-  Select,
-  Space,
-} from 'antd';
-import { PlusIcon } from 'lucide-react';
+import { useMutation } from '@tanstack/react-query';
+import { Form, FormProps, Input, Radio, RadioGroupProps, Rate } from 'antd';
 import { MediaType } from '../../../constants';
+import { SelectTag } from '../select-tag';
 
 interface CreateMediaProps {
   modal: ModalInstance;
   onSuccess?: () => void;
 }
 
-function CreateMedia({ modal, onSuccess }: CreateMediaProps) {
+export function CreateMedia({ modal, onSuccess }: CreateMediaProps) {
   const [form] = Form.useForm();
+
+  const { mutate: createMedia } = useMutation({
+    mutationFn: (params: CreateMediaParams) => window.managementApi.createMedia(params),
+    onSuccess() {
+      onSuccess?.();
+    },
+  });
 
   const mediaTypeOptions: RadioGroupProps['options'] = [
     {
@@ -34,7 +32,10 @@ function CreateMedia({ modal, onSuccess }: CreateMediaProps) {
   ];
 
   const handleSubmit: FormProps['onFinish'] = (values) => {
-    //
+    createMedia({
+      ...values,
+      rate: Math.round(values.rate * 2),
+    });
   };
 
   return (
@@ -61,26 +62,9 @@ function CreateMedia({ modal, onSuccess }: CreateMediaProps) {
           <Rate allowHalf />
         </Form.Item>
         <Form.Item name={'tags'} label={'Tags'}>
-          <Select
-            mode='multiple'
-            options={[]}
-            dropdownRender={(menu) => (
-              <>
-                {menu}
-                <Divider style={{ margin: '8px 0' }} />
-                <Space style={{ padding: '0 8px 4px' }}>
-                  <Input />
-                  <Button type='text' icon={<PlusIcon size={'1rem'} />}>
-                    Add
-                  </Button>
-                </Space>
-              </>
-            )}
-          />
+          <SelectTag />
         </Form.Item>
       </Form>
     </Modal>
   );
 }
-
-export default CreateMedia;

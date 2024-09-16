@@ -1,5 +1,14 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ConfigProvider, ThemeConfig } from 'antd';
 import Router from './router';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const theme: ThemeConfig = {
   token: {
@@ -9,9 +18,11 @@ const theme: ThemeConfig = {
 
 function App() {
   return (
-    <ConfigProvider theme={theme}>
-      <Router />
-    </ConfigProvider>
+    <QueryClientProvider client={queryClient}>
+      <ConfigProvider theme={theme}>
+        <Router />
+      </ConfigProvider>
+    </QueryClientProvider>
   );
 }
 

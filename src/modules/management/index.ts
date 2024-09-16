@@ -7,6 +7,7 @@ export class ManagementModule {
     app.whenReady().then(() => {
       const mediasApi = new MediasApi();
       ipcMain.handle(MngEvent.Medias.FindMany, (_, params) => mediasApi.findMany(params));
+      ipcMain.handle(MngEvent.Medias.Create, (_, params) => mediasApi.create(params));
     });
   }
 }
