@@ -1,5 +1,6 @@
 import { extractPath } from '@/utils';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const normFile = (e: any) => {
   if (Array.isArray(e)) {
     return e;
@@ -10,8 +11,4 @@ export const normFile = (e: any) => {
 export const createOutputPath = (path: string, suffix: string) => {
   const { dirname, filename } = extractPath(path);
   return `${dirname}/${filename}_${suffix}.mp4`;
-};
-
-export const getFilePath = (input: any) => {
-  return (input.originFileObj as File).path;
 };

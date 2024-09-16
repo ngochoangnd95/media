@@ -19,7 +19,7 @@ import {
 import { MoreHorizontalIcon, UploadIcon } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { Flip, Rotate } from '../../../constants';
-import { createOutputPath, getFilePath, normFile } from '../../../utils';
+import { createOutputPath, normFile } from '../../../utils';
 import { useProcess } from '../../hooks/useProcess';
 import styles from './EditVideoPage.module.css';
 
@@ -43,7 +43,7 @@ function EditVideoPage() {
       .validateFields(['input'])
       .then(() => {
         window.videoEditorApi.trimBlankBorder({
-          input: getFilePath(form.getFieldValue('input')),
+          input: window.commonApi.showFilePath(form.getFieldValue('input')),
         });
       })
       .catch((result) => Promise.resolve(result));
@@ -142,14 +142,14 @@ function EditVideoPage() {
   const handleSubmit: FormProps['onFinish'] = (values) => {
     const params = {
       ...values,
-      input: getFilePath(values.input?.[0]),
+      input: window.commonApi.showFilePath(values.input?.[0]),
     };
     window.videoEditorApi.edit(params);
   };
 
   const handleValuesChange: FormProps['onValuesChange'] = (changedValues) => {
     if (changedValues.input?.[0]) {
-      const inputPath = getFilePath(changedValues.input[0]);
+      const inputPath = window.commonApi.showFilePath(changedValues.input[0]);
       const destination = createOutputPath(inputPath, 'EDITED');
       form.setFieldValue('destination', destination);
     }

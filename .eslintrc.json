@@ -12,6 +12,9 @@
     "plugin:import/electron",
     "plugin:import/typescript"
   ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "error"
+  },
   "settings": {
     "import/resolver": {
       "alias": {

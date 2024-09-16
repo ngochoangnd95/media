@@ -2,7 +2,7 @@ import { extractPath } from '@/utils';
 import { Button, Col, Flex, Form, FormProps, Input, message, Row, Typography, Upload } from 'antd';
 import { UploadIcon } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { getFilePath, normFile } from '../../../utils';
+import { normFile } from '../../../utils';
 import { useProcess } from '../../hooks/useProcess';
 import styles from './TakeScreenshotPage.module.css';
 
@@ -33,7 +33,7 @@ function TakeScreenshotPage() {
   const handleSubmit: FormProps['onFinish'] = (values) => {
     const params = {
       ...values,
-      input: getFilePath(values.input?.[0]),
+      input: window.commonApi.showFilePath(values.input?.[0]),
       timestamps: (values.timestamps || '').split(','),
     };
     window.videoEditorApi.takeScreenshot(params);
@@ -41,7 +41,7 @@ function TakeScreenshotPage() {
 
   const handleValuesChange: FormProps['onValuesChange'] = (changedValues) => {
     if (changedValues.input) {
-      const inputPath = getFilePath(changedValues.input?.[0]);
+      const inputPath = window.commonApi.showFilePath(changedValues.input?.[0]);
       const { dirname } = extractPath(inputPath);
       form.setFieldValue('destination', dirname);
     }

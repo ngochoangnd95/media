@@ -8,6 +8,7 @@ import {
   trimBlankBorderSchema,
 } from '../schemas/video-editor.schema';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Listener = (event: IpcRendererEvent, name: ProcessEvent, ...args: any[]) => void;
 
 export type EditParams = z.infer<typeof editSchema>;

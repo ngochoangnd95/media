@@ -1,7 +1,7 @@
 import { Button, Col, Flex, Form, FormProps, Input, message, Row, Typography, Upload } from 'antd';
 import { UploadIcon } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { createOutputPath, getFilePath, normFile } from '../../../utils';
+import { createOutputPath, normFile } from '../../../utils';
 import { useProcess } from '../../hooks/useProcess';
 import styles from './MergeVideosPage.module.css';
 
@@ -32,14 +32,14 @@ function MergeVideosPage() {
   const handleSubmit: FormProps['onFinish'] = (values) => {
     const params = {
       ...values,
-      inputs: values.inputs.map((input: any) => getFilePath(input)),
+      inputs: values.inputs.map((input: File) => window.commonApi.showFilePath(input)),
     };
     window.videoEditorApi.merge(params);
   };
 
   const handleValuesChange: FormProps['onValuesChange'] = (changedValues) => {
     if (changedValues.inputs) {
-      const inputPath = getFilePath(changedValues.inputs?.[0]);
+      const inputPath = window.commonApi.showFilePath(changedValues.inputs?.[0]);
       const destination = createOutputPath(inputPath, 'MERGED');
       form.setFieldValue('destination', destination);
     }
