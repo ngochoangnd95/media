@@ -1,3 +1,4 @@
+import MediasPage from '@/modules/management/views/pages/medias';
 import EditVideoPage from '@/modules/video-editor/views/pages/edit';
 import MergeVideosPage from '@/modules/video-editor/views/pages/merge/MergeVideosPage';
 import TakeScreenshotPage from '@/modules/video-editor/views/pages/take-screenshot';
@@ -30,7 +31,7 @@ const router = createHashRouter([
       },
       {
         path: 'management',
-        element: <></>,
+        element: <MediasPage />,
       },
     ],
   },

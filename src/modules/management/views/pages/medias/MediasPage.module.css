@@ -1,0 +1,57 @@
+:root {
+  --grid-cols: 1;
+}
+
+.gridLayout {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+}
+
+.item {
+  width: 100%;
+  height: calc((100vw - 2rem - (var(--grid-cols) - 1) * 0.5rem) / var(--grid-cols));
+  overflow: hidden;
+}
+
+@media screen and (min-width: 300px) {
+  :root {
+    --grid-cols: 2;
+  }
+}
+
+@media screen and (min-width: 450px) {
+  :root {
+    --grid-cols: 3;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  :root {
+    --grid-cols: 4;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  :root {
+    --grid-cols: 5;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  :root {
+    --grid-cols: 6;
+  }
+}
+
+@media screen and (min-width: 1050px) {
+  :root {
+    --grid-cols: 7;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  :root {
+    --grid-cols: 8;
+  }
+}
